@@ -1,0 +1,22 @@
+{
+    "name": "SmartOLT Integration",
+    "version": "18.0.4.1.0",
+    "summary": "Integration with SmartOLT for OLT/ONU management",
+    "description": "Connects Mundo1Telecom Odoo with SmartOLT to manage OLTs, ONUs, and ODBs.",
+    "author": "Mundo1Telecom",
+    "category": "Telecommunications",
+    "depends": ["base", "mail", "base_setup", "contacts"],
+    "data": [
+        "security/ir.model.access.csv",
+        "views/smartolt_onu_type_views.xml",
+        "views/smartolt_zone_views.xml",
+        "views/smartolt_speed_profile_views.xml",
+        "views/smartolt_onu_views.xml",
+        "views/smartolt_olt_views.xml",
+        "views/smartolt_odb_views.xml",
+        "views/res_config_settings_views.xml",
+    ],
+    "installable": True,
+    "application": True,
+    "license": "LGPL-3",
+}

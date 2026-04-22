@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Search View -->
+    <record id="mikrotik_service_plan_view_search" model="ir.ui.view">
+        <field name="name">mikrotik.service.plan.search</field>
+        <field name="model">mikrotik.service.plan</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="ppp_profile_name"/>
+                <separator/>
+                <filter name="filter_archived" string="Archived" domain="[('active','=',False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="mikrotik_service_plan_view_list" model="ir.ui.view">
+        <field name="name">mikrotik.service.plan.list</field>
+        <field name="model">mikrotik.service.plan</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="speed_label"/>
+                <field name="ppp_profile_name"/>
+                <field name="monthly_price"/>
+                <field name="currency_id" optional="hide"/>
+                <field name="cut_day"/>
+                <field name="subscription_count"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="mikrotik_service_plan_view_form" model="ir.ui.view">
+        <field name="name">mikrotik.service.plan.form</field>
+        <field name="model">mikrotik.service.plan</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_push_to_routers" type="object"
+                            string="Push to Routers" class="btn-primary"
+                            icon="fa-upload"
+                            invisible="not id"
+                            confirm="Push PPP profile to all selected routers?" />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_subscriptions" type="object"
+                                class="oe_stat_button" icon="fa-users"
+                                invisible="subscription_count == 0">
+                            <field name="subscription_count" widget="statinfo"
+                                   string="Subscriptions"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Plan name..."/></h1>
+                    </div>
+                    <field name="sequence" invisible="1"/>
+                    <field name="active" invisible="1"/>
+                    <field name="ppp_profile_name_manual" invisible="1"/>
+                    <group>
+                        <group string="Plan">
+                            <field name="download_speed"/>
+                            <field name="upload_speed"/>
+                            <field name="speed_label" readonly="1"/>
+                        </group>
+                        <group string="Billing">
+                            <field name="monthly_price"/>
+                            <field name="currency_id"/>
+                            <field name="cut_day"/>
+                            <field name="subscription_template_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Router Configuration">
+                            <field name="ppp_profile_name"/>
+                            <field name="router_ids" widget="many2many_tags"
+                                   colspan="2"/>
+                            <div colspan="2">
+                                <button name="action_select_all_routers" type="object"
+                                        string="Select All Routers"
+                                        class="btn-secondary btn-sm"
+                                        invisible="not id" />
+                            </div>
+                        </group>
+                        <group string="Push Status" invisible="not profile_push_status">
+                            <field name="profile_push_status" readonly="1" nolabel="1"/>
+                        </group>
+                    </group>
+                    <group string="QoS / Burst">
+                        <group string="Burst">
+                            <field name="burst_limit"
+                                   placeholder="e.g. 20M/40M"/>
+                            <field name="burst_threshold"
+                                   placeholder="e.g. 8M/16M"/>
+                            <field name="burst_time"
+                                   placeholder="e.g. 10/10"/>
+                        </group>
+                        <group string="QoS">
+                            <field name="limit_at"
+                                   placeholder="e.g. 5M/10M"/>
+                            <field name="priority"/>
+                            <field name="contention_ratio"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="mikrotik_service_plan_action" model="ir.actions.act_window">
+        <field name="name">Service Plans</field>
+        <field name="res_model">mikrotik.service.plan</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="mikrotik_service_plan_view_search"/>
+    </record>
+
+</odoo>

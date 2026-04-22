@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_smartolt" model="ir.ui.view">
+        <field name="name">res.config.settings.view.smartolt</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="SmartOLT" string="SmartOLT" name="smartolt_integration"
+                     logo="/smartolt_integration/static/description/icon.png">
+                    <block title="API Connection" name="smartolt_api_block">
+                        <setting string="API URL" help="Base URL of your SmartOLT instance, e.g. https://smartolt.example.com">
+                            <field name="smartolt_api_url" placeholder="https://smartolt.example.com"/>
+                        </setting>
+                        <setting string="API Key" help="X-Token API key from your SmartOLT account">
+                            <div class="d-flex align-items-center gap-2">
+                                <field name="smartolt_api_key" password="True"/>
+                                <button name="action_test_connection" type="object"
+                                        string="Test Connection" class="btn-secondary"
+                                        icon="fa-plug"/>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Manual Sync" name="smartolt_sync_block">
+                        <setting string="Sync Data" help="Manually sync data from SmartOLT API">
+                            <div class="mt8 d-flex flex-wrap gap-2">
+                                <button name="action_sync_olts" type="object"
+                                        string="Sync OLTs" class="btn-secondary"
+                                        icon="fa-server"/>
+                                <button name="action_sync_onu_types" type="object"
+                                        string="Sync ONU Types" class="btn-secondary"
+                                        icon="fa-cubes"/>
+                                <button name="action_sync_zones" type="object"
+                                        string="Sync Zones" class="btn-secondary"
+                                        icon="fa-map-marker"/>
+                                <button name="action_sync_speed_profiles" type="object"
+                                        string="Sync Speed Profiles" class="btn-secondary"
+                                        icon="fa-tachometer"/>
+                                <button name="action_sync_all_onus" type="object"
+                                        string="Sync All ONUs" class="btn-primary"
+                                        icon="fa-download"
+                                        confirm="This will sync all ONUs from SmartOLT. This may take a while. Continue?"/>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

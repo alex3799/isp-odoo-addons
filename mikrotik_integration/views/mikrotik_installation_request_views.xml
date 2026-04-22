@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree View -->
+    <record id="mikrotik_installation_request_tree" model="ir.ui.view">
+        <field name="name">mikrotik.installation.request.tree</field>
+        <field name="model">mikrotik.installation.request</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state=='draft'"
+                  decoration-warning="state=='scheduled'"
+                  decoration-success="state=='installed'"
+                  decoration-muted="state=='cancelled'">
+                <field name="name"/>
+                <field name="partner_name"/>
+                <field name="zone"/>
+                <field name="city" optional="show"/>
+                <field name="state_id" optional="show"/>
+                <field name="technician_id"/>
+                <field name="scheduled_date"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="mikrotik_installation_request_form" model="ir.ui.view">
+        <field name="name">mikrotik.installation.request.form</field>
+        <field name="model">mikrotik.installation.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_schedule"
+                            string="Schedule"
+                            type="object"
+                            invisible="state != 'draft'"/>
+                    <button name="action_confirm_installation"
+                            string="Confirm Installation"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'scheduled'"/>
+                    <button name="action_open_onboarding"
+                            string="Start Onboarding →"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'installed' or partner_id != False"/>
+                    <button name="action_cancel"
+                            string="Cancel"
+                            type="object"
+                            invisible="state not in ('draft', 'scheduled')"/>
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,scheduled,installed,cancelled"
+                           clickable="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="partner_name" placeholder="Customer Name"/>
+                        </h1>
+                        <h2>
+                            <field name="identification_number" placeholder="ID Number (Cédula)"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group string="Contact Info">
+                            <field name="phone"/>
+                            <field name="mobile"/>
+                            <field name="email"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group string="Installation Details">
+                            <field name="zone"/>
+                            <field name="technician_id"/>
+                            <field name="scheduled_date"/>
+                            <field name="installation_date" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Address">
+                        <group>
+                            <field name="street"/>
+                            <field name="street2"/>
+                            <field name="city"/>
+                        </group>
+                        <group>
+                            <field name="state_id"
+                                   domain="[('country_id.code', '=', 'DO')]"/>
+                            <field name="country_id"/>
+                            <field name="zip"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes" colspan="2" nolabel="0"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="mikrotik_installation_request_search" model="ir.ui.view">
+        <field name="name">mikrotik.installation.request.search</field>
+        <field name="model">mikrotik.installation.request</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_name"/>
+                <field name="zone"/>
+                <filter name="filter_draft" string="Draft" domain="[('state','=','draft')]"/>
+                <filter name="filter_scheduled" string="Scheduled" domain="[('state','=','scheduled')]"/>
+                <filter name="filter_installed" string="Installed" domain="[('state','=','installed')]"/>
+                <filter name="filter_cancelled" string="Cancelled" domain="[('state','=','cancelled')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_technician" string="Technician" context="{'group_by': 'technician_id'}"/>
+                    <filter name="group_zone" string="Zone" context="{'group_by': 'zone'}"/>
+                    <filter name="group_city" string="Municipio" context="{'group_by': 'city'}"/>
+                    <filter name="group_state" string="Provincia" context="{'group_by': 'state_id'}"/>
+                    <filter name="group_scheduled_date" string="Scheduled Date" context="{'group_by': 'scheduled_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="mikrotik_installation_request_action" model="ir.actions.act_window">
+        <field name="name">Installation Requests</field>
+        <field name="res_model">mikrotik.installation.request</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="mikrotik_installation_request_search"/>
+    </record>
+
+</odoo>

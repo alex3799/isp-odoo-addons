@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- List View -->
+    <record id="smartolt_zone_view_list" model="ir.ui.view">
+        <field name="name">smartolt.zone.list</field>
+        <field name="model">smartolt.zone</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="smartolt_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="smartolt_zone_view_form" model="ir.ui.view">
+        <field name="name">smartolt.zone.form</field>
+        <field name="model">smartolt.zone</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group string="Zone Information">
+                        <group>
+                            <field name="name"/>
+                            <field name="smartolt_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Server Action: Sync Zones (menu trigger) -->
+    <record id="action_server_sync_zones_menu" model="ir.actions.server">
+        <field name="name">Sync Zones</field>
+        <field name="model_id" ref="model_smartolt_zone"/>
+        <field name="state">code</field>
+        <field name="code">model.sync_from_smartolt()</field>
+    </record>
+
+    <!-- Window Action -->
+    <record id="smartolt_zone_action" model="ir.actions.act_window">
+        <field name="name">Zones</field>
+        <field name="res_model">smartolt.zone</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

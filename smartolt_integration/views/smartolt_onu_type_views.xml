@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- List View -->
+    <record id="smartolt_onu_type_view_list" model="ir.ui.view">
+        <field name="name">smartolt.onu.type.list</field>
+        <field name="model">smartolt.onu.type</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="pon_type"/>
+                <field name="capability"/>
+                <field name="ethernet_ports"/>
+                <field name="wifi_ports"/>
+                <field name="voip_ports"/>
+                <field name="catv"/>
+                <field name="allow_custom_profiles"/>
+                <field name="smartolt_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="smartolt_onu_type_view_form" model="ir.ui.view">
+        <field name="name">smartolt.onu.type.form</field>
+        <field name="model">smartolt.onu.type</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group string="ONU Type Information">
+                        <group>
+                            <field name="name"/>
+                            <field name="pon_type"/>
+                            <field name="capability"/>
+                            <field name="smartolt_id"/>
+                        </group>
+                        <group>
+                            <field name="ethernet_ports"/>
+                            <field name="wifi_ports"/>
+                            <field name="voip_ports"/>
+                            <field name="catv"/>
+                            <field name="allow_custom_profiles"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Server Action: Sync ONU Types (menu trigger) -->
+    <record id="action_server_sync_onu_types_menu" model="ir.actions.server">
+        <field name="name">Sync ONU Types</field>
+        <field name="model_id" ref="model_smartolt_onu_type"/>
+        <field name="state">code</field>
+        <field name="code">model.sync_from_smartolt()</field>
+    </record>
+
+    <!-- Window Action -->
+    <record id="smartolt_onu_type_action" model="ir.actions.act_window">
+        <field name="name">ONU Types</field>
+        <field name="res_model">smartolt.onu.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

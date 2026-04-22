@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_smartolt_onu_user,smartolt.onu user,model_smartolt_onu,base.group_user,1,1,1,0
+access_smartolt_onu_manager,smartolt.onu manager,model_smartolt_onu,base.group_system,1,1,1,1
+access_smartolt_olt_user,smartolt.olt user,model_smartolt_olt,base.group_user,1,1,1,0
+access_smartolt_olt_manager,smartolt.olt manager,model_smartolt_olt,base.group_system,1,1,1,1
+access_smartolt_onu_type_user,smartolt.onu.type user,model_smartolt_onu_type,base.group_user,1,1,1,0
+access_smartolt_onu_type_manager,smartolt.onu.type manager,model_smartolt_onu_type,base.group_system,1,1,1,1
+access_smartolt_zone_user,smartolt.zone user,model_smartolt_zone,base.group_user,1,1,1,0
+access_smartolt_zone_manager,smartolt.zone manager,model_smartolt_zone,base.group_system,1,1,1,1
+access_smartolt_speed_profile_user,smartolt.speed.profile user,model_smartolt_speed_profile,base.group_user,1,1,1,0
+access_smartolt_speed_profile_manager,smartolt.speed.profile manager,model_smartolt_speed_profile,base.group_system,1,1,1,1
+access_smartolt_odb_user,smartolt.odb user,model_smartolt_odb,base.group_user,1,1,1,0
+access_smartolt_odb_manager,smartolt.odb manager,model_smartolt_odb,base.group_system,1,1,1,1

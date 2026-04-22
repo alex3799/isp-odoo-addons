@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Search View -->
+    <record id="mikrotik_router_view_search" model="ir.ui.view">
+        <field name="name">mikrotik.router.search</field>
+        <field name="model">mikrotik.router</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="host"/>
+                <field name="pop_name"/>
+                <separator/>
+                <filter name="filter_online" string="Online" domain="[('status','=','online')]"/>
+                <filter name="filter_offline" string="Offline" domain="[('status','=','offline')]"/>
+                <filter name="filter_error" string="Error" domain="[('status','=','error')]"/>
+                <separator/>
+                <filter name="filter_archived" string="Archived" domain="[('active','=',False)]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_status" string="Status" context="{'group_by': 'status'}"/>
+                    <filter name="group_pop" string="POP / Office" context="{'group_by': 'pop_name'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="mikrotik_router_view_list" model="ir.ui.view">
+        <field name="name">mikrotik.router.list</field>
+        <field name="model">mikrotik.router</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="host"/>
+                <field name="pop_name"/>
+                <field name="router_version"/>
+                <field name="router_model"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'online'"
+                       decoration-danger="status == 'offline'"
+                       decoration-warning="status == 'error'"
+                       decoration-muted="status == 'draft'"/>
+                <field name="last_sync"/>
+                <field name="cpu_load"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="mikrotik_router_view_kanban" model="ir.ui.view">
+        <field name="name">mikrotik.router.kanban</field>
+        <field name="model">mikrotik.router</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="status">
+                <field name="name"/>
+                <field name="host"/>
+                <field name="status"/>
+                <field name="pop_name"/>
+                <field name="router_version"/>
+                <field name="router_model"/>
+                <field name="cpu_load"/>
+                <templates>
+                    <t t-name="card" class="oe_kanban_global_click">
+                        <div style="font-size:15px; font-weight:700; margin-bottom:4px;">
+                            <field name="name"/>
+                        </div>
+                        <div style="font-size:12px; color:#6c757d; margin-bottom:6px;">
+                            <field name="host"/>
+                        </div>
+                        <div class="mb-1">
+                            <field name="status" widget="badge"
+                                   decoration-success="status == 'online'"
+                                   decoration-danger="status == 'offline'"
+                                   decoration-warning="status == 'error'"
+                                   decoration-muted="status == 'draft'"/>
+                        </div>
+                        <div style="font-size:12px; margin-top:4px;">
+                            <field name="pop_name"/>
+                        </div>
+                        <div style="font-size:11px; color:#6c757d; margin-top:4px;">
+                            <field name="router_model"/>
+                        </div>
+                        <div style="font-size:11px; color:#6c757d;">
+                            <field name="router_version"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="mikrotik_router_view_form" model="ir.ui.view">
+        <field name="name">mikrotik.router.form</field>
+        <field name="model">mikrotik.router</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_test_connection" type="object"
+                            string="Test Connection" class="oe_highlight"
+                            icon="fa-plug"/>
+                    <button name="action_sync_ppp_secrets" type="object"
+                            string="Sync PPPoE Secrets"
+                            icon="fa-refresh"/>
+                    <button name="action_sync_ppp_profiles" type="object"
+                            string="Sync PPP Profiles"
+                            icon="fa-refresh"/>
+                    <button name="action_sync_queues" type="object"
+                            string="Sync Queues"
+                            icon="fa-refresh"/>
+                    <button name="action_sync_ip_pools" type="object"
+                            string="Sync IP Pools"
+                            icon="fa-refresh"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="draft,online,offline,error"/>
+                </header>
+                <sheet>
+                    <!-- Status Cards Row -->
+                    <div class="d-flex justify-content-start gap-3 mb-3">
+
+                        <!-- New / Draft (gray) -->
+                        <div invisible="status != 'draft'"
+                             style="display:inline-block; padding:12px 24px; border-radius:8px; text-align:center; min-width:150px; background:#6c757d; color:white;">
+                            <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; opacity:0.85;">Status</div>
+                            <div style="font-size:28px; font-weight:700; line-height:1.3;">New</div>
+                        </div>
+                        <!-- Online (green) -->
+                        <div invisible="status != 'online'"
+                             style="display:inline-block; padding:12px 24px; border-radius:8px; text-align:center; min-width:150px; background:#28a745; color:white;">
+                            <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; opacity:0.85;">Status</div>
+                            <div style="font-size:28px; font-weight:700; line-height:1.3;">Online</div>
+                        </div>
+                        <!-- Offline (red) -->
+                        <div invisible="status != 'offline'"
+                             style="display:inline-block; padding:12px 24px; border-radius:8px; text-align:center; min-width:150px; background:#dc3545; color:white;">
+                            <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; opacity:0.85;">Status</div>
+                            <div style="font-size:28px; font-weight:700; line-height:1.3;">Offline</div>
+                        </div>
+                        <!-- Error (orange) -->
+                        <div invisible="status != 'error'"
+                             style="display:inline-block; padding:12px 24px; border-radius:8px; text-align:center; min-width:150px; background:#fd7e14; color:white;">
+                            <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; opacity:0.85;">Status</div>
+                            <div style="font-size:28px; font-weight:700; line-height:1.3;">Error</div>
+                        </div>
+
+                        <!-- CPU Load card (only when online) -->
+                        <div invisible="status != 'online'"
+                             style="display:inline-block; padding:12px 24px; border-radius:8px; text-align:center; min-width:150px; background:#343a40; color:white;">
+                            <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; opacity:0.85;">CPU Load</div>
+                            <div style="font-size:28px; font-weight:700; line-height:1.3;">
+                                <field name="cpu_load" readonly="1" nolabel="1"/>%
+                            </div>
+                        </div>
+
+                        <!-- Free Memory card (only when online) -->
+                        <div invisible="status != 'online'"
+                             style="display:inline-block; padding:12px 24px; border-radius:8px; text-align:center; min-width:150px; background:#343a40; color:white;">
+                            <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; opacity:0.85;">Free Memory</div>
+                            <div style="font-size:24px; font-weight:700; line-height:1.3;">
+                                <field name="free_memory" readonly="1" nolabel="1"/> MB
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Stat Buttons -->
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object"
+                                name="action_sync_ip_pools"
+                                icon="fa-server">
+                            <field name="pool_count" widget="statinfo" string="IP Pools"/>
+                        </button>
+                    </div>
+
+                    <!-- Connection + Location -->
+                    <group>
+                        <group string="Connection">
+                            <field name="host"/>
+                            <field name="port"/>
+                            <field name="username"/>
+                            <field name="password" password="True"/>
+                            <field name="use_ssl"/>
+                        </group>
+                        <group string="Location">
+                            <field name="pop_name"/>
+                            <field name="whatsapp_number"/>
+                        </group>
+                    </group>
+
+                    <!-- Notebook -->
+                    <notebook>
+                        <page string="Router Info" name="router_info">
+                            <group>
+                                <group>
+                                    <field name="router_identity" readonly="1"/>
+                                    <field name="router_version" readonly="1"/>
+                                    <field name="router_model" readonly="1"/>
+                                    <field name="router_uptime" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="cpu_load" readonly="1"/>
+                                    <field name="free_memory" readonly="1"/>
+                                    <field name="total_memory" readonly="1"/>
+                                    <field name="last_sync" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Settings" name="settings">
+                            <group string="General Settings">
+                                <field name="parent_queue_name"
+                                       placeholder="e.g. ISP-Parent"/>
+                                <field name="address_list_name"
+                                       placeholder="e.g. customers"/>
+                            </group>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="note" nolabel="1"
+                                   placeholder="Internal notes about this router…"/>
+                        </page>
+                    </notebook>
+
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="mikrotik_router_action" model="ir.actions.act_window">
+        <field name="name">Routers</field>
+        <field name="res_model">mikrotik.router</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="mikrotik_router_view_search"/>
+        <field name="context">{'search_default_group_status': 0}</field>
+    </record>
+
+</odoo>

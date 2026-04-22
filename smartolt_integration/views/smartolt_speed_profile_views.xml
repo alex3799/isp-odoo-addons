@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- List View -->
+    <record id="smartolt_speed_profile_view_list" model="ir.ui.view">
+        <field name="name">smartolt.speed.profile.list</field>
+        <field name="model">smartolt.speed.profile</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="speed"/>
+                <field name="direction"/>
+                <field name="profile_type"/>
+                <field name="smartolt_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="smartolt_speed_profile_view_form" model="ir.ui.view">
+        <field name="name">smartolt.speed.profile.form</field>
+        <field name="model">smartolt.speed.profile</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group string="Speed Profile Information">
+                        <group>
+                            <field name="name"/>
+                            <field name="speed"/>
+                            <field name="smartolt_id"/>
+                        </group>
+                        <group>
+                            <field name="direction"/>
+                            <field name="profile_type"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Server Action: Sync Speed Profiles (menu trigger) -->
+    <record id="action_server_sync_speed_profiles_menu" model="ir.actions.server">
+        <field name="name">Sync Speed Profiles</field>
+        <field name="model_id" ref="model_smartolt_speed_profile"/>
+        <field name="state">code</field>
+        <field name="code">model.sync_from_smartolt()</field>
+    </record>
+
+    <!-- Window Action -->
+    <record id="smartolt_speed_profile_action" model="ir.actions.act_window">
+        <field name="name">Speed Profiles</field>
+        <field name="res_model">smartolt.speed.profile</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

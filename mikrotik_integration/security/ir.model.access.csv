@@ -1,0 +1,18 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mikrotik_router_user,mikrotik.router user,model_mikrotik_router,base.group_user,1,0,0,0
+access_mikrotik_router_admin,mikrotik.router admin,model_mikrotik_router,base.group_system,1,1,1,1
+access_mikrotik_ppp_secret_user,mikrotik.ppp.secret user,model_mikrotik_ppp_secret,base.group_user,1,1,1,1
+access_mikrotik_ppp_profile_user,mikrotik.ppp.profile user,model_mikrotik_ppp_profile,base.group_user,1,0,0,0
+access_mikrotik_ppp_profile_admin,mikrotik.ppp.profile admin,model_mikrotik_ppp_profile,base.group_system,1,1,1,1
+access_mikrotik_queue_simple_user,mikrotik.queue.simple user,model_mikrotik_queue_simple,base.group_user,1,0,0,0
+access_mikrotik_queue_simple_admin,mikrotik.queue.simple admin,model_mikrotik_queue_simple,base.group_system,1,1,1,1
+access_mikrotik_ip_pool_user,mikrotik.ip.pool user,model_mikrotik_ip_pool,base.group_user,1,1,1,0
+access_mikrotik_ip_pool_admin,mikrotik.ip.pool admin,model_mikrotik_ip_pool,base.group_system,1,1,1,1
+access_mikrotik_ip_address_user,mikrotik.ip.address user,model_mikrotik_ip_address,base.group_user,1,1,1,0
+access_mikrotik_ip_address_admin,mikrotik.ip.address admin,model_mikrotik_ip_address,base.group_system,1,1,1,1
+access_mikrotik_service_plan_user,mikrotik.service.plan.user,model_mikrotik_service_plan,base.group_user,1,0,0,0
+access_mikrotik_service_plan_admin,mikrotik.service.plan.admin,model_mikrotik_service_plan,base.group_system,1,1,1,1
+access_mikrotik_promesa_wizard_user,mikrotik.promesa.wizard user,model_mikrotik_promesa_wizard,base.group_user,1,1,1,1
+access_mikrotik_installation_request_manager,mikrotik.installation.request manager,model_mikrotik_installation_request,mikrotik_integration.group_mikrotik_manager,1,1,1,1
+access_mikrotik_installation_request_user,mikrotik.installation.request user,model_mikrotik_installation_request,base.group_user,1,1,1,0
+access_customer_onboarding_wizard_user,mikrotik.customer.onboarding.wizard user,model_mikrotik_customer_onboarding_wizard,base.group_user,1,1,1,1

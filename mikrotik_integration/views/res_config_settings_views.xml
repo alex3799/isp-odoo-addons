@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_mikrotik" model="ir.ui.view">
+        <field name="name">res.config.settings.view.mikrotik</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="MikroTik" string="MikroTik" name="mikrotik_integration"
+                     logo="/mikrotik_integration/static/description/icon.png">
+                    <block title="MikroTik Routers" name="mikrotik_routers_block">
+                        <setting string="Manage Routers"
+                                 help="Add and configure MikroTik routers for monitoring and management.">
+                            <div class="mt8">
+                                <button name="action_open_mikrotik_routers" type="object"
+                                        string="Manage Routers" class="btn-secondary"
+                                        icon="fa-server"/>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Subscriptions" name="mikrotik_subscriptions_block">
+                        <setting string="Max Payment Promise Days"
+                                 help="Maximum number of days allowed for a payment promise (promesa).">
+                            <field name="mikrotik_max_promesa_days"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Search View -->
+    <record id="mikrotik_ip_address_view_search" model="ir.ui.view">
+        <field name="name">mikrotik.ip.address.search</field>
+        <field name="model">mikrotik.ip.address</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="pool_id"/>
+                <field name="partner_id"/>
+                <separator/>
+                <filter name="available" string="Available" domain="[('state','=','available')]"/>
+                <filter name="assigned" string="Assigned" domain="[('state','=','assigned')]"/>
+                <filter name="reserved" string="Reserved" domain="[('state','=','reserved')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_subnet" string="Subnet" context="{'group_by': 'subnet'}"/>
+                    <filter name="group_pool" string="Pool" context="{'group_by': 'pool_id'}"/>
+                    <filter name="group_state" string="State" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="mikrotik_ip_address_view_list" model="ir.ui.view">
+        <field name="name">mikrotik.ip.address.list</field>
+        <field name="model">mikrotik.ip.address</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="subnet"/>
+                <field name="pool_id"/>
+                <field name="state"
+                       widget="badge"
+                       decoration-success="state == 'available'"
+                       decoration-danger="state == 'assigned'"
+                       decoration-warning="state == 'reserved'"/>
+                <field name="partner_id"/>
+                <field name="subscription_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="mikrotik_ip_address_view_form" model="ir.ui.view">
+        <field name="name">mikrotik.ip.address.form</field>
+        <field name="model">mikrotik.ip.address</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group string="Address">
+                            <field name="name"/>
+                            <field name="subnet" readonly="1"/>
+                            <field name="pool_id"/>
+                            <field name="router_id" readonly="1"/>
+                        </group>
+                        <group string="Assignment">
+                            <field name="state"
+                                   widget="badge"
+                                   decoration-success="state == 'available'"
+                                   decoration-danger="state == 'assigned'"
+                                   decoration-warning="state == 'reserved'"/>
+                            <field name="subscription_id"/>
+                            <field name="partner_id" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

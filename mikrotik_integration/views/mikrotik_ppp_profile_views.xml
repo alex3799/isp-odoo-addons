@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Search View -->
+    <record id="mikrotik_ppp_profile_view_search" model="ir.ui.view">
+        <field name="name">mikrotik.ppp.profile.search</field>
+        <field name="model">mikrotik.ppp.profile</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="router_id"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_router" string="Router" context="{'group_by': 'router_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="mikrotik_ppp_profile_view_list" model="ir.ui.view">
+        <field name="name">mikrotik.ppp.profile.list</field>
+        <field name="model">mikrotik.ppp.profile</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0">
+                <field name="name"/>
+                <field name="local_address"/>
+                <field name="remote_address"/>
+                <field name="dns_server"/>
+                <field name="rate_limit"/>
+                <field name="only_one"/>
+                <field name="router_id"/>
+                <field name="last_sync"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="mikrotik_ppp_profile_view_form" model="ir.ui.view">
+        <field name="name">mikrotik.ppp.profile.form</field>
+        <field name="model">mikrotik.ppp.profile</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0" delete="0">
+                <sheet>
+                    <group>
+                        <group string="Identity">
+                            <field name="name"/>
+                            <field name="router_id"/>
+                            <field name="mikrotik_id"/>
+                            <field name="last_sync"/>
+                        </group>
+                        <group string="Addressing">
+                            <field name="local_address"/>
+                            <field name="local_pool_id" readonly="1"/>
+                            <field name="remote_address"/>
+                            <field name="remote_pool_id" readonly="1"/>
+                            <field name="dns_server"/>
+                            <field name="address_list"/>
+                            <field name="bridge"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Limits">
+                            <field name="rate_limit"/>
+                            <field name="only_one"/>
+                        </group>
+                        <group string="Filters">
+                            <field name="incoming_filter"/>
+                            <field name="outgoing_filter"/>
+                            <field name="interface_list"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Protocol Options">
+                            <field name="change_tcp_mss"/>
+                            <field name="use_compression"/>
+                            <field name="use_encryption"/>
+                            <field name="use_mpls"/>
+                            <field name="use_upnp"/>
+                        </group>
+                    </group>
+
+                    <group string="Notes">
+                        <field name="comment" nolabel="1"
+                               placeholder="No comment"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="mikrotik_ppp_profile_action" model="ir.actions.act_window">
+        <field name="name">PPP Profiles</field>
+        <field name="res_model">mikrotik.ppp.profile</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="mikrotik_ppp_profile_view_search"/>
+    </record>
+
+</odoo>

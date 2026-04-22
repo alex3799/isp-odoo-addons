@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Onboarding Wizard Form View -->
+    <record id="customer_onboarding_wizard_form" model="ir.ui.view">
+        <field name="name">mikrotik.customer.onboarding.wizard.form</field>
+        <field name="model">mikrotik.customer.onboarding.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Customer Onboarding">
+                <sheet>
+                    <!-- Step indicator -->
+                    <div class="alert alert-info text-center mb-3" role="status">
+                        <strong>
+                            <field name="step_label" readonly="1" nolabel="1"/>
+                        </strong>
+                    </div>
+
+                    <!-- Step 1: Personal Data -->
+                    <group invisible="step != 'personal_data'">
+                        <group string="Identity">
+                            <field name="partner_name"/>
+                            <field name="identification_number"/>
+                            <field name="email"/>
+                            <field name="phone"/>
+                            <field name="mobile"/>
+                            <field name="zone"/>
+                        </group>
+                        <group string="Address">
+                            <field name="street"/>
+                            <field name="street2"/>
+                            <field name="city"/>
+                            <field name="state_id"/>
+                            <field name="country_id"/>
+                            <field name="zip"/>
+                        </group>
+                    </group>
+
+                    <!-- Step 2: Billing -->
+                    <group invisible="step != 'billing'">
+                        <group string="Billing Details">
+                            <field name="router_id"/>
+                            <field name="service_plan_id"
+                                   domain="[('router_ids', 'in', router_id)]"
+                                   invisible="not router_id"
+                                   required="router_id != False"/>
+                            <field name="plan_speed_label"
+                                   readonly="1"
+                                   invisible="not plan_speed_label"
+                                   string="Speed"/>
+                            <field name="cut_day"/>
+                        </group>
+                    </group>
+
+                    <!-- Step 3: Services -->
+                    <group invisible="step != 'services'">
+                        <group string="IP Assignment">
+                            <field name="ip_pool_id"
+                                   domain="[('router_id', '=', router_id)]"
+                                   invisible="not router_id"/>
+                            <field name="ip_address_id"
+                                   domain="[('pool_id', '=', ip_pool_id), ('state', '=', 'available')]"
+                                   options="{'no_create': True, 'no_open': True}"
+                                   invisible="not ip_pool_id"/>
+                            <field name="ppp_remote_address"
+                                   readonly="1"
+                                   invisible="not ip_address_id"
+                                   string="Assigned IP"/>
+                        </group>
+                        <group string="PPPoE Credentials">
+                            <field name="ppp_username"/>
+                            <div class="d-flex gap-2 align-items-center">
+                                <field name="ppp_password" nolabel="1" class="flex-grow-1"/>
+                                <button name="action_regenerate_password" type="object"
+                                        string="↻" title="Regenerate Password"
+                                        class="btn btn-sm btn-secondary"/>
+                            </div>
+                        </group>
+                    </group>
+                    <div invisible="step != 'services'" class="mt-2 mb-2">
+                        <button name="action_regenerate_credentials"
+                                string="↻ Regenerate Credentials"
+                                type="object"
+                                class="btn btn-sm btn-secondary"/>
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_prev_step"
+                            string="← Back"
+                            type="object"
+                            invisible="step == 'personal_data'"/>
+                    <button name="action_next_step"
+                            string="Next →"
+                            type="object"
+                            invisible="step == 'services'"/>
+                    <button name="action_confirm"
+                            string="Register Customer"
+                            type="object"
+                            class="btn-primary"
+                            invisible="step != 'services'"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Wizard Action -->
+    <record id="customer_onboarding_wizard_action" model="ir.actions.act_window">
+        <field name="name">Customer Onboarding</field>
+        <field name="res_model">mikrotik.customer.onboarding.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

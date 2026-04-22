@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Top-level MikroTik menu -->
+    <menuitem id="mikrotik_menu_root"
+              name="MikroTik"
+              sequence="25"/>
+
+    <!-- ISP Customers — first item (default view) -->
+    <menuitem id="mikrotik_menu_isp_customers"
+              name="ISP Customers"
+              parent="mikrotik_menu_root"
+              action="isp_customers_action"
+              sequence="1"/>
+
+    <!-- Installations -->
+    <menuitem id="mikrotik_menu_installations"
+              name="Installations"
+              parent="mikrotik_menu_root"
+              action="mikrotik_installation_request_action"
+              sequence="5"/>
+
+    <!-- Configuration submenu (groups technical items) -->
+    <menuitem id="mikrotik_menu_configuration"
+              name="Configuration"
+              parent="mikrotik_menu_root"
+              sequence="20"/>
+
+    <menuitem id="mikrotik_menu_service_plans"
+              name="Service Plans"
+              action="mikrotik_service_plan_action"
+              parent="mikrotik_menu_configuration"
+              sequence="10"/>
+
+    <menuitem id="mikrotik_menu_routers"
+              name="Routers"
+              parent="mikrotik_menu_configuration"
+              action="mikrotik_router_action"
+              sequence="20"/>
+
+    <menuitem id="mikrotik_menu_ppp_profiles"
+              name="PPP Profiles"
+              parent="mikrotik_menu_configuration"
+              action="mikrotik_ppp_profile_action"
+              sequence="30"/>
+
+    <menuitem id="mikrotik_menu_ppp_secrets"
+              name="PPPoE Secrets"
+              parent="mikrotik_menu_configuration"
+              action="mikrotik_ppp_secret_action"
+              sequence="40"/>
+
+    <menuitem id="mikrotik_menu_queues"
+              name="Simple Queues"
+              parent="mikrotik_menu_configuration"
+              action="mikrotik_queue_simple_action"
+              sequence="50"/>
+
+    <menuitem id="mikrotik_menu_ip_pools"
+              name="IP Pools"
+              parent="mikrotik_menu_configuration"
+              action="mikrotik_ip_pool_action"
+              sequence="60"/>
+
+</odoo>

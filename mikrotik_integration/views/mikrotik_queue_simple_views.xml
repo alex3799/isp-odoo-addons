@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Search View -->
+    <record id="mikrotik_queue_simple_view_search" model="ir.ui.view">
+        <field name="name">mikrotik.queue.simple.search</field>
+        <field name="model">mikrotik.queue.simple</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="target"/>
+                <field name="router_id"/>
+                <separator/>
+                <filter name="filter_enabled" string="Enabled" domain="[('disabled','=',False)]"/>
+                <filter name="filter_disabled" string="Disabled" domain="[('disabled','=',True)]"/>
+                <separator/>
+                <filter name="filter_static" string="Static" domain="[('dynamic','=',False)]"/>
+                <filter name="filter_dynamic" string="Dynamic" domain="[('dynamic','=',True)]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_router" string="Router" context="{'group_by': 'router_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="mikrotik_queue_simple_view_list" model="ir.ui.view">
+        <field name="name">mikrotik.queue.simple.list</field>
+        <field name="model">mikrotik.queue.simple</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0" decoration-muted="disabled == True">
+                <field name="name"/>
+                <field name="target"/>
+                <field name="max_limit"/>
+                <field name="burst_limit"/>
+                <field name="parent"/>
+                <field name="disabled" widget="boolean_toggle"/>
+                <field name="dynamic" widget="boolean_toggle"/>
+                <field name="router_id"/>
+                <field name="last_sync"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="mikrotik_queue_simple_view_form" model="ir.ui.view">
+        <field name="name">mikrotik.queue.simple.form</field>
+        <field name="model">mikrotik.queue.simple</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0" delete="0">
+                <sheet>
+                    <group>
+                        <group string="Identity">
+                            <field name="name"/>
+                            <field name="target"/>
+                            <field name="parent"/>
+                            <field name="router_id"/>
+                            <field name="mikrotik_id"/>
+                            <field name="last_sync"/>
+                        </group>
+                        <group string="Status">
+                            <field name="disabled"/>
+                            <field name="dynamic"/>
+                            <field name="packet_marks"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Limits">
+                            <field name="max_limit"/>
+                            <field name="limit_at"/>
+                            <field name="priority"/>
+                            <field name="queue_type"/>
+                        </group>
+                        <group string="Burst">
+                            <field name="burst_limit"/>
+                            <field name="burst_threshold"/>
+                            <field name="burst_time"/>
+                        </group>
+                    </group>
+
+                    <group string="Notes">
+                        <field name="comment" nolabel="1"
+                               placeholder="No comment"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="mikrotik_queue_simple_action" model="ir.actions.act_window">
+        <field name="name">Simple Queues</field>
+        <field name="res_model">mikrotik.queue.simple</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="mikrotik_queue_simple_view_search"/>
+        <field name="context">{'search_default_filter_enabled': 1}</field>
+    </record>
+
+</odoo>

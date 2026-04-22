@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ═══ Promesa Wizard Form ════════════════════════════════════════════ -->
+    <record id="mikrotik_promesa_wizard_form" model="ir.ui.view">
+        <field name="name">mikrotik.promesa.wizard.form</field>
+        <field name="model">mikrotik.promesa.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Grant Payment Promise">
+                <group>
+                    <field name="subscription_id" readonly="1"/>
+                    <field name="promesa_date"/>
+                    <field name="days_computed" readonly="1"/>
+                    <field name="note"/>
+                </group>
+                <footer>
+                    <button string="Confirm" name="action_confirm" type="object"
+                            class="btn-warning"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- ═══ Inherit sale.subscription form ════════════════════════════════ -->
+    <record id="sale_subscription_form_isp" model="ir.ui.view">
+        <field name="name">sale.subscription.form.isp</field>
+        <field name="model">sale.subscription</field>
+        <field name="inherit_id" ref="subscription_oca.sale_subscription_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Replace old ISP header buttons: all actions moved to ISP page -->
+            <xpath expr="//button[@name='action_close_subscription']" position="after">
+                <button string="Suspend" name="action_isp_suspend" type="object"
+                        class="btn-warning"
+                        invisible="isp_status != 'active'"
+                        confirm="Suspend this customer's service?"/>
+                <button string="Restore Service" name="action_isp_unsuspend" type="object"
+                        class="btn-success"
+                        invisible="isp_status not in ('suspended', 'voluntary_suspend', 'promesa')"/>
+                <button string="Grant Promesa" name="action_grant_promesa" type="object"
+                        class="btn-info"
+                        invisible="isp_status not in ('active', 'suspended')"/>
+            </xpath>
+
+            <!-- ISP Service notebook page -->
+            <xpath expr="//notebook" position="inside">
+                <page string="ISP Service" name="isp_service_page">
+
+                    <!-- ── Section 1: Service Plan ── -->
+                    <group string="Service Plan">
+                        <field name="service_plan_id" colspan="2"/>
+                        <field name="plan_speed_label" readonly="1"
+                               invisible="not plan_speed_label"
+                               string="Speed" colspan="2"/>
+                    </group>
+
+                    <!-- ── Section 2: PPPoE + Billing columns ── -->
+                    <group>
+                        <group string="PPPoE Connection">
+                            <field name="ppp_router_id"
+                                   readonly="ppp_provisioned"/>
+                            <field name="ppp_username"
+                                   readonly="ppp_provisioned"/>
+                            <field name="ppp_password"
+                                   readonly="ppp_provisioned"
+                                   password="True"/>
+                            <field name="ppp_ip_pool_id"
+                                   readonly="ppp_provisioned"/>
+                            <field name="ppp_remote_address"
+                                   readonly="ppp_provisioned"/>
+                            <field name="ppp_provisioned" readonly="1"
+                                   widget="boolean_toggle"/>
+                            <field name="ppp_secret_id" readonly="1"/>
+                        </group>
+                        <group string="Billing &amp; Status">
+                            <field name="isp_status"
+                                   widget="badge"
+                                   decoration-success="isp_status == 'active'"
+                                   decoration-danger="isp_status == 'suspended'"
+                                   decoration-warning="isp_status == 'promesa'"
+                                   decoration-info="isp_status == 'voluntary_suspend'"/>
+                            <field name="effective_cut_date" readonly="1"/>
+                            <field name="promesa_deadline" readonly="1"
+                                   invisible="isp_status != 'promesa'"/>
+                            <field name="promesa_days" readonly="1"
+                                   invisible="isp_status != 'promesa'"/>
+                        </group>
+                    </group>
+
+                    <!-- ── Section 3: Action Button Bar ── -->
+                    <div class="o_field_widget mt-3 mb-2 d-flex flex-wrap gap-2">
+                        <button name="action_provision_pppoe"
+                                string="⚡ Provision PPPoE"
+                                type="object"
+                                class="btn btn-primary"
+                                invisible="ppp_provisioned"/>
+                        <button name="action_provision_pppoe"
+                                string="↺ Update PPPoE"
+                                type="object"
+                                class="btn btn-secondary"
+                                invisible="not ppp_provisioned"/>
+                        <button name="action_assign_ip_from_pool"
+                                string="⬡ Assign IP from Pool"
+                                type="object"
+                                class="btn btn-secondary"
+                                invisible="not ppp_ip_pool_id or ppp_remote_address"/>
+                        <button name="action_isp_voluntary_suspend"
+                                string="⏸ Voluntary Suspend"
+                                type="object"
+                                class="btn btn-secondary"
+                                invisible="isp_status != 'active'"
+                                confirm="Mark as voluntary suspend?"/>
+                        <button name="action_kick_session"
+                                string="✕ Kick Session"
+                                type="object"
+                                class="btn btn-secondary"
+                                invisible="isp_status != 'active'"/>
+                    </div>
+
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- ═══ Inherit sale.subscription list ════════════════════════════════ -->
+    <record id="sale_subscription_tree_isp" model="ir.ui.view">
+        <field name="name">sale.subscription.list.isp</field>
+        <field name="model">sale.subscription</field>
+        <field name="inherit_id" ref="subscription_oca.sale_subscription_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="service_plan_id" optional="show"/>
+                <field name="ppp_router_id" optional="show"/>
+                <field name="ppp_remote_address" optional="show"/>
+                <field name="isp_status"
+                       widget="badge"
+                       decoration-success="isp_status == 'active'"
+                       decoration-danger="isp_status == 'suspended'"
+                       decoration-warning="isp_status == 'promesa'"
+                       decoration-info="isp_status == 'voluntary_suspend'"
+                       optional="show"/>
+                <field name="effective_cut_date" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ═══ Inherit sale.subscription search ══════════════════════════════ -->
+    <record id="sale_subscription_search_isp" model="ir.ui.view">
+        <field name="name">sale.subscription.search.isp</field>
+        <field name="model">sale.subscription</field>
+        <field name="inherit_id" ref="subscription_oca.view_sale_order_pending_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='pendingsubs']" position="after">
+                <separator/>
+                <filter name="isp_active" string="Active"
+                        domain="[('isp_status','=','active')]"/>
+                <filter name="isp_suspended" string="Suspended"
+                        domain="[('isp_status','=','suspended')]"/>
+                <filter name="isp_promesa" string="Promesa"
+                        domain="[('isp_status','=','promesa')]"/>
+                <filter name="isp_voluntary" string="Voluntary Suspend"
+                        domain="[('isp_status','=','voluntary_suspend')]"/>
+                <separator/>
+                <filter name="ppp_provisioned" string="Provisioned"
+                        domain="[('ppp_provisioned','=',True)]"/>
+                <filter name="ppp_not_provisioned" string="Not Provisioned"
+                        domain="[('ppp_provisioned','=',False)]"/>
+            </xpath>
+            <xpath expr="//group[@expand='0']" position="inside">
+                <filter name="groupby_isp_status" string="ISP Status"
+                        context="{'group_by': 'isp_status'}"/>
+                <filter name="groupby_router" string="Router"
+                        context="{'group_by': 'ppp_router_id'}"/>
+                <filter name="groupby_service_plan" string="Service Plan"
+                        context="{'group_by': 'service_plan_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- ISP-specific kanban view -->
+    <record id="isp_subscription_kanban" model="ir.ui.view">
+        <field name="name">sale.subscription.kanban.isp</field>
+        <field name="model">sale.subscription</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="isp_status" class="o_kanban_small_column">
+                <field name="isp_status"/>
+                <field name="partner_id"/>
+                <field name="service_plan_id"/>
+                <field name="ppp_router_id"/>
+                <field name="ppp_remote_address"/>
+                <field name="plan_speed_label"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="fw-bold fs-6">
+                            <field name="partner_id"/>
+                        </div>
+                        <div class="text-muted small mt-1">
+                            <field name="service_plan_id"/>
+                            <t t-if="record.plan_speed_label.value">
+                                <span class="ms-1">(<t t-esc="record.plan_speed_label.value"/>)</span>
+                            </t>
+                        </div>
+                        <div class="small mt-1">
+                            <i class="fa fa-server me-1" title="Router"/>
+                            <field name="ppp_router_id"/>
+                            <t t-if="record.ppp_remote_address.value">
+                                <span class="ms-2 font-monospace">
+                                    <t t-esc="record.ppp_remote_address.value"/>
+                                </span>
+                            </t>
+                        </div>
+                        <div class="mt-2">
+                            <span t-attf-class="badge rounded-pill #{
+                                record.isp_status.raw_value === 'active' ? 'text-bg-success' :
+                                record.isp_status.raw_value === 'suspended' ? 'text-bg-danger' :
+                                record.isp_status.raw_value === 'promesa' ? 'text-bg-warning' :
+                                'text-bg-info'
+                            }">
+                                <t t-esc="record.isp_status.value"/>
+                            </span>
+                        </div>
+                        <footer class="d-flex gap-2 mt-2">
+                            <button t-if="record.isp_status.raw_value === 'active'"
+                                    name="action_isp_suspend"
+                                    type="object"
+                                    class="btn btn-sm btn-warning">Suspend</button>
+                            <button t-if="['suspended','voluntary_suspend','promesa'].includes(record.isp_status.raw_value)"
+                                    name="action_isp_unsuspend"
+                                    type="object"
+                                    class="btn btn-sm btn-success">Restore</button>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ISP Customers action -->
+    <record id="isp_customers_action" model="ir.actions.act_window">
+        <field name="name">ISP Customers</field>
+        <field name="res_model">sale.subscription</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('service_plan_id', '!=', False)]</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" ref="sale_subscription_search_isp"/>
+        <field name="view_ids"
+               eval="[(5,0,0),
+                      (0,0,{'view_mode':'kanban','view_id':ref('isp_subscription_kanban')}),
+                      (0,0,{'view_mode':'list',  'view_id':ref('subscription_oca.sale_subscription_tree')}),
+                      (0,0,{'view_mode':'form',  'view_id':ref('subscription_oca.sale_subscription_form')})]"/>
+    </record>
+
+</odoo>

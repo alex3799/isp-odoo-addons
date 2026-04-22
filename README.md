@@ -13,4 +13,4 @@ LGPL-3.0 — see [LICENSE](LICENSE) for full text.
 
 ## Status
 
-Active development. Production-tested at [Mundo1 Telecom](https://mundo1telecom.com).
+Active development. Not yet production testd.

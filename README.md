@@ -1,4 +1,4 @@
-# Mundo1 Odoo Addons
+# MikroTik Odoo Addons
 
 Open-source Odoo 18 modules for ISP operations.
 
